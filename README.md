@@ -1,6 +1,8 @@
 # ESPHome Dashboard
 Dashboard for office Co2 and some plant swag
 
+![](https://github.com/DeastinY/esphome-waveshare-e-paper-dashboard/blob/main/dash.jpg?raw=true)
+
 Inspired by: https://github.com/maxmacstn/HA-ePaper-Display  
 Thanks for the nice repository!
 
