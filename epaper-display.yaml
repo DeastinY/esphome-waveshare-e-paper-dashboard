@@ -1,0 +1,297 @@
+esphome:
+  name: epaper-display
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: "your_password"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Epaper-Display Fallback Hotspot"
+    password: "fallback_password"
+
+captive_portal:
+
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO23
+
+font:
+
+  - file: 'fonts/Roboto-Medium.ttf'
+    id: roboto_med_30
+    size: 30
+  - file: 'fonts/Roboto-Regular.ttf'
+    id: footer_font
+    size: 15
+    glyphs:
+      ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
+       '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+       'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+       'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+       'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+       'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/','º','µ','³']
+
+  - file: 'fonts/Roboto-Regular.ttf'
+    id: main_sensor_unit
+    size: 20
+    glyphs:
+      ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
+       '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+       'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+       'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+       'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+       'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/','º','µ','³']
+       
+  - file: 'fonts/Roboto-Medium.ttf'
+    id: sub_sensor_font
+    size: 30
+    glyphs:
+      ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
+       '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+       'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+       'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+       'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+       'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/','º','µ','³']
+  
+  - file: 'fonts/Roboto-Bold.ttf'
+    id: main_sensor_font
+    size: 72
+  
+  - file: 'fonts/materialdesignicons-webfont.ttf'
+    id:  mdi_small
+    size: 31
+    glyphs: [
+      # Wifi
+      '󰤫', # mdi-wifi-strength-alert-outline
+      '󰤟', # mdi-wifi-strength-1
+      '󰤢', # mdi-wifi-strength-2
+      '󰤥', # mdi-wifi-strength-3
+      '󰤨', # mdi-wifi-strength-4
+      '󰔏', # mdi-themometer
+      '󰖎', # mdi-water-percent
+      '󰃞', # mdi-sun
+      '󰹦', # mdi-plant
+      '󱒁' # mdi-water-can
+      ]
+
+  - file: 'fonts/materialdesignicons-webfont.ttf'
+    id:  mdi_wifi
+    size: 20
+    glyphs: [
+      # Wifi
+      '󰤫', # mdi-wifi-strength-alert-outline
+      '󰤟', # mdi-wifi-strength-1
+      '󰤢', # mdi-wifi-strength-2
+      '󰤥', # mdi-wifi-strength-3
+      '󰤨'  # mdi-wifi-strength-4
+
+      ]
+
+  - file: 'fonts/materialdesignicons-webfont.ttf'
+    id:  mdi_med
+    size: 33
+    glyphs: [
+      # Wifi
+      '󰤫', # mdi-wifi-strength-alert-outline
+      '󰤟', # mdi-wifi-strength-1
+      '󰤢', # mdi-wifi-strength-2
+      '󰤥', # mdi-wifi-strength-3
+      '󰤨', # mdi-wifi-strength-4
+      '󰀦' # mdi-alert
+      ]
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+sensor:
+  - platform: homeassistant
+    entity_id: sensor.indoor_co2 
+    id: air_quality
+
+  - platform: homeassistant
+    entity_id: sensor.indoor_temp
+    id: temp_indoor
+  
+  - platform: homeassistant
+    entity_id: sensor.indoor_humid
+    id: humid_indoor
+  
+  - platform: homeassistant
+    entity_id: sensor.basement_humid
+    id: basement_humid
+  
+  - platform: homeassistant
+    entity_id: sensor.basement_temp
+    id: basement_temp
+  
+  - platform: homeassistant
+    entity_id: sensor.plant_temp
+    id: plant_temp
+    
+  - platform: homeassistant
+    entity_id: sensor.plant_moisture
+    id: plant_moisture
+    
+  - platform: homeassistant
+    entity_id: sensor.plant_illuminance
+    id: plant_illuminance
+  
+  - platform: homeassistant
+    entity_id: sensor.plant_soil
+    id: plant_soil
+
+  - platform: wifi_signal
+    name: "WiFi Signal Sensor"
+    id: wifisignal
+    update_interval: 60s
+    
+display:
+  - platform: waveshare_epaper
+    cs_pin: GPIO26
+    dc_pin: GPIO25
+    busy_pin: GPIO27
+    reset_pin: GPIO33
+    model: 4.20in
+    rotation: 180
+    update_interval: 15min
+    id: epaperdisplay
+    lambda: |-
+      
+      int offsetY = 137;
+      
+      int air_quality_danger_thresh = 800;
+      int quality_air = int(id(air_quality).state);
+      float indoor_temp = id(temp_indoor).state;
+      float temp_plant = id(plant_temp).state;
+      float temp_basement = id(basement_temp).state;
+      int indoor_humid = int(id(humid_indoor).state);
+      int humid_basement = int(id(basement_humid).state);
+      int moisture_plant = int(id(plant_moisture).state);
+      int soil_plant = int(id(plant_soil).state);
+      int illuminance_plant = int(id(plant_illuminance).state);
+  
+
+      /* OFFICE */
+      it.print(10, 10, id(main_sensor_unit), "OFFICE");
+      it.filled_rectangle(98, 21, 285, 3);
+      it.print(25, 114, id(main_sensor_unit), TextAlign::BASELINE_LEFT, "Co2");
+      it.print(375, 75,  id(mdi_small), TextAlign::BASELINE_CENTER, "󰔏"); //thermometer
+      it.print(375, 115, id(mdi_small), TextAlign::BASELINE_CENTER, "󰖎"); //water-percent
+
+      if(indoor_temp > -100 && indoor_temp < 100){
+        it.printf(357, 75, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , "%2.1fºc", indoor_temp);
+      }else{
+        it.print(357, 75, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , " - ºc");
+      }
+
+      if(indoor_humid >=0 && indoor_humid <= 100){
+        it.printf(357, 115, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , "%3d%%", indoor_humid);
+      }else{
+        it.print(357, 115, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , " -  %");
+      }
+      
+      if(quality_air < 6000 && quality_air >=0){
+        if (quality_air > 100){
+          it.printf(230, 115, id(main_sensor_font), TextAlign::BASELINE_RIGHT , "%3d", quality_air);
+          it.print(230, 115, id(main_sensor_unit),TextAlign::BASELINE_LEFT, "ppm");
+        }else{
+          it.printf(230, 115, id(main_sensor_font), TextAlign::BASELINE_RIGHT , "%2d", quality_air);
+          it.print(230, 115, id(main_sensor_unit), TextAlign::BASELINE_LEFT, "ppm");
+        }
+
+        if(quality_air >= air_quality_danger_thresh){
+          it.print(37, 87, id(mdi_med), TextAlign::BASELINE_CENTER, "󰀦"); //warning
+        }
+
+      }
+      else{
+        it.print(175, 114 + offsetY, id(main_sensor_font), TextAlign::BASELINE_RIGHT , "- ");
+        it.print(180, 114 + offsetY, id(main_sensor_unit),TextAlign::BASELINE_LEFT, "ppm");
+      } 
+
+      /* PLANT */
+      it.print(10, 10 + offsetY, id(main_sensor_unit), "PLANT");
+      it.filled_rectangle(98, 21 + offsetY, 285, 3);
+      it.print(375, 75 + offsetY,  id(mdi_small), TextAlign::BASELINE_CENTER, "󰔏"); //thermometer
+      it.print(375, 115 + offsetY, id(mdi_small), TextAlign::BASELINE_CENTER, "󰖎"); //water-percent
+      it.print(230, 75 + offsetY, id(mdi_small), TextAlign::BASELINE_CENTER, "󱒁"); //watering-can
+      it.print(125, 75 + offsetY, id(mdi_small), TextAlign::BASELINE_CENTER, "󰃞"); //luminosity
+      it.print(230, 115 + offsetY, id(mdi_small), TextAlign::BASELINE_CENTER, "󰹦"); //soil
+      
+
+      if(temp_plant > -100 && temp_plant < 100){
+        it.printf(357, 75 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , "%2.1fºc", temp_plant);
+      }else{
+        it.print(357, 75 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , " - ºc");
+      }
+
+      if(humid_basement >=0 && humid_basement <= 100){
+        it.printf(357, 115 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , "%3d%%", humid_basement);
+      }else{
+        it.print(357, 115 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , " -  %");
+      }
+
+      if(moisture_plant >=0 && moisture_plant <= 100){
+        it.printf(212, 75 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , "%3d%%", moisture_plant);
+      }else{
+        it.print(212, 75 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , " -  %");
+      }
+      
+      if(soil_plant >=0 && soil_plant <= 10000){
+        it.printf(212, 115 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , "%3dµS/cm", soil_plant);
+      }else{
+        it.print(212, 115 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , " -  µS/cm");
+      }
+      
+      if(illuminance_plant >=0 && illuminance_plant <= 30000){
+        it.printf(107, 75 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , "%5d", illuminance_plant);
+      }else{
+        it.print(107, 75 + offsetY, id(sub_sensor_font), TextAlign::BASELINE_RIGHT , " -  lux");
+      }
+
+      /* FOOTERT */
+      it.strftime(355, 295 , id(footer_font), TextAlign::BASELINE_RIGHT , "Updated at %d/%b/%Y %H:%M", id(homeassistant_time).now());
+      
+      /* WiFi Signal Strenght */
+      if(id(wifisignal).has_state()) {
+        int x = 375;
+        int y = 295;
+        if (id(wifisignal).state >= -50) {
+            //Excellent
+            it.print(x, y, id(mdi_wifi), TextAlign::BASELINE_CENTER, "󰤨");
+            ESP_LOGI("WiFi", "Exellent");
+        } else if (id(wifisignal).state  >= -60) {
+            //Good
+            it.print(x, y, id(mdi_wifi), TextAlign::BASELINE_CENTER, "󰤥");
+            ESP_LOGI("WiFi", "Good");
+        } else if (id(wifisignal).state  >= -75) {
+            //Fair
+            it.print(x, y, id(mdi_wifi), TextAlign::BASELINE_CENTER, "󰤢");
+            ESP_LOGI("WiFi", "Fair");
+        } else if (id(wifisignal).state  >= -100) {
+            //Weak
+            it.print(x, y, id(mdi_wifi), TextAlign::BASELINE_CENTER, "󰤟");
+            ESP_LOGI("WiFi", "Weak");
+        } else {
+            //Unlikely working signal
+            it.print(x, y, id(mdi_wifi), TextAlign::BASELINE_CENTER, "󰤫");
+            ESP_LOGI("WiFi", "Unlikely");
+        }
+      }
+
