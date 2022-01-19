@@ -34,7 +34,7 @@ It also shows temperature and humidity from the same station. In addition stats 
 ## How to use?
 
  1. Install ESPhome on your [computer](https://esphome.io/guides/getting_started_command_line.html) or [Home Assistant Add-on](https://esphome.io/guides/getting_started_hassio.html)
- 2. Copy yaml file and fonts folder to your ESPhome folder.
+ 2. Get the yaml file and download the fonts (Roboto and materialdesignicons-webfont.ttf) to your ESPhome folder.
  3. Edit your Wi-Fi SSID/Password, sensors entity ID, etc. as your own preference.
  4. Connect hardwares together.
  5. Flash the firmware.
